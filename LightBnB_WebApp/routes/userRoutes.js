@@ -31,16 +31,18 @@ router.post("/login", (req, res) => {
       return res.send({ error: "no user with that id" });
     }
 
-    if (!bcrypt.compareSync(password, user.password)) {
+    const thisUser = user[0];
+
+    if (!bcrypt.compareSync(password, thisUser.password)) {
       return res.send({ error: "error" });
     }
 
-    req.session.userId = user.id;
+    req.session.userId = thisUser.id;
     res.send({
       user: {
-        name: user.name,
-        email: user.email,
-        id: user.id,
+        name: thisUser.name,
+        email: thisUser.email,
+        id: thisUser.id,
       },
     });
   });
@@ -65,11 +67,11 @@ router.get("/me", (req, res) => {
       if (!user) {
         return res.send({ error: "no user with that id" });
       }
-
+      const thisUser = user[0];
       res.send({
         user: {
-          name: user.name,
-          email: user.email,
+          name: thisUser.name,
+          email: thisUser.email,
           id: userId,
         },
       });
